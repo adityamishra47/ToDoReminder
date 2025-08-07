@@ -6,27 +6,54 @@ import {
   Platform,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React from 'react';
 import AppColors from '../utils/AppColors';
 
 const Homepage = () => {
+  const inputRef = React.useRef<TextInput>(null);
+  const valueRef = React.useRef('');
+
+  const handleAddButtonPress = () => {
+    console.log('Add button pressed with text:', valueRef.current);
+    // Clear the input imperatively
+    inputRef.current?.clear();
+    valueRef.current = '';
+  };
+
   return (
-    <SafeAreaView style={styles.rootContainer}>
-      <View style={styles.todoContainer}>
-        <Text style={styles.titleStyle}>Today</Text>
-      </View>
-      <View style={styles.inputViewContainer}>
-        <TextInput
-          style={styles.textInputStyle}
-          placeholder="Write a task..."
-          placeholderTextColor={AppColors.textInputColor}
-        />
-        <TouchableOpacity style={styles.addButtonContainer}>
-          <Text style={styles.addButtonText}>Add</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <SafeAreaView style={styles.rootContainer}>
+        <View style={styles.todoContainer}>
+          <Text style={styles.titleStyle}>Today</Text>
+        </View>
+        <View style={styles.inputViewContainer}>
+          <TextInput
+            ref={inputRef}
+            style={styles.textInputStyle}
+            placeholder="Write a task..."
+            placeholderTextColor={AppColors.textInputColor}
+            onChangeText={text => {
+              valueRef.current = text;
+            }}
+          />
+          <TouchableOpacity
+            style={styles.addButtonContainer}
+            // onPress={handleAddButtonPress}
+            onPress={() => {
+              console.log('Button pressed');
+              handleAddButtonPress();
+            }}
+          >
+            <Text style={styles.addButtonText}>Add</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
