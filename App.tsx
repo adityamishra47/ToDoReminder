@@ -7,9 +7,12 @@
 
 import { NewAppScreen } from '@react-native/new-app-screen';
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import Homepage from './src/component/Homepage';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
+
+  return <Homepage />;
 
   return (
     <View style={styles.container}>
