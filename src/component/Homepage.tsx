@@ -10,14 +10,26 @@ import {
 } from 'react-native';
 import React from 'react';
 import AppColors from '../utils/AppColors';
+import { useTodoStore } from '../store/todoStore';
 
 const Homepage = () => {
   const inputRef = React.useRef<TextInput>(null);
   const valueRef = React.useRef('');
 
+  //   const addTodo = useTodoStore(state => state.addTodo);
+  const { addTodo, todos } = useTodoStore();
+
   const handleAddButtonPress = () => {
     console.log('Add button pressed with text:', valueRef.current);
-    // Clear the input imperatively
+    if (valueRef.current.trim()) {
+      const newTodo = {
+        id: Date.now(),
+        text: valueRef.current,
+        completed: false,
+      };
+      addTodo(newTodo);
+      console.log('New todo added:', newTodo);
+    }
     inputRef.current?.clear();
     valueRef.current = '';
   };
@@ -30,6 +42,11 @@ const Homepage = () => {
       <SafeAreaView style={styles.rootContainer}>
         <View style={styles.todoContainer}>
           <Text style={styles.titleStyle}>Today</Text>
+          <View>
+            {todos.map((todo, idx) => (
+              <Text key={idx}>{todo.text}</Text>
+            ))}
+          </View>
         </View>
         <View style={styles.inputViewContainer}>
           <TextInput
@@ -43,11 +60,7 @@ const Homepage = () => {
           />
           <TouchableOpacity
             style={styles.addButtonContainer}
-            // onPress={handleAddButtonPress}
-            onPress={() => {
-              console.log('Button pressed');
-              handleAddButtonPress();
-            }}
+            onPress={handleAddButtonPress}
           >
             <Text style={styles.addButtonText}>Add</Text>
           </TouchableOpacity>
@@ -80,8 +93,8 @@ const styles = StyleSheet.create({
     height: 56,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: 22,
+    justifyContent: 'center',
   },
   textInputStyle: {
     flex: 1,
@@ -99,11 +112,12 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.addButtonColor,
     borderRadius: 12,
     marginStart: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   addButtonText: {
     color: AppColors.addButtonTextColor,
     fontSize: 18,
     textAlign: 'center',
-    lineHeight: 56,
   },
 });

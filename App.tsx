@@ -5,7 +5,11 @@ import Homepage from './src/component/Homepage';
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
-  return <Homepage />;
+  return (
+    <View style={styles.container}>
+      <Homepage />
+    </View>
+  );
 
   return (
     <View style={styles.container}>
