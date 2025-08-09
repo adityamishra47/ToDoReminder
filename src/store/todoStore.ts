@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { todo } from './modal';
 
 type TodoState = {
@@ -20,6 +21,18 @@ export const useTodoStore = create<TodoState>()(
     }),
     {
       name: 'todo-storage', // unique name for the storage
+      storage: {
+        getItem: async name => {
+          const item = await AsyncStorage.getItem(name);
+          return item ? JSON.parse(item) : null;
+        },
+        setItem: async (name, value) => {
+          await AsyncStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: async name => {
+          await AsyncStorage.removeItem(name);
+        },
+      },
     },
   ),
 );
